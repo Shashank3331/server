@@ -28,6 +28,7 @@ app.post("/register", async (req, res) => {
   res.send(result);
 });
 
+console.log("I made changes")
 
   app.post('/login',async (req,res)=>{
     if(req.body.password && req.body.email){
