@@ -8,6 +8,7 @@ const cors = require('cors')
 // const Jwt = require('jsonwebtoken');
 // const jwtKey = "jims";
 
+const Razorpay = require("razorpay");
 app.use(express.json());
 app.use(cors());
 
@@ -85,6 +86,50 @@ app.delete("/remove/:id", async (req, res) => {
      res.send(user)
 });
 
+app.post('/orders',async (req,res)=>{
+ const razorpay = new Razorpay({
+  key_id: "rzp_test_4W26iQdHpqmXmZ",
+  key_secret: "SjzHI8fpzFh4wCDzdr75U7Az"
+ })
+ const options = {
+  amount: req.body.amount,
+  currency: req.body.currency,
+  recept: "receipt#1",
+  payment_capture: 1
+ }
+ try{
+  const response = await razorpay.orders.create(options)
+  res.json({
+    order_id: response.id,
+    currency: response.currency,
+    amount: response.amount
+  })
+ } catch(error){
+  res.status(500).send("Internal server error")
+ }
+})
+
+app.get("payment/id",async(req,res)=>{
+  const {id} = req.params
+  const razorpay = new Razorpay({
+    key_id: "rzp_test_4W26iQdHpqmXmZ",
+    key_secret: "SjzHI8fpzFh4wCDzdr75U7Az"
+   })
+   try{
+    const payment = await razorpay.payments.fetch(id)
+    if(!payment){
+      return res.status(500).json("Somthing went wrong")
+    }
+    res.json({
+      status: payment.status,
+      method: payment.method,
+      amount: payment.amount,
+      currency: payment.currency
+    })
+   }catch(error){
+    res.status(500).json("Failed to fetch")
+   }
+})
 app.listen(port, () => {
   console.log(`server is running on ${port}`);
 });
