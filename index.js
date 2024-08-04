@@ -28,7 +28,7 @@ app.post("/register", async (req, res) => {
   res.send(result);
 });
 
-console.log("I made changes Ok DaVil Thanks")
+
 
 
   app.post('/login',async (req,res)=>{
