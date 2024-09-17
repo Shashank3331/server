@@ -1,7 +1,7 @@
 const express = require("express");
 require("./config/dbConn");
 const Product = require("./config/User");
-const port = 2001;
+const port = 2002;
 const User = require('./config/UserSAuth');
 const app = express();
 const cors = require('cors')
